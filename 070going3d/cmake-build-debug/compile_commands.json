@@ -1,0 +1,68 @@
+[
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/Graphics_Project_Using_OpenGL.dir/src/main.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/Graphics_Project_Using_OpenGL.dir/src/main.cpp.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/main.cpp",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/main.cpp",
+  "output": "CMakeFiles/Graphics_Project_Using_OpenGL.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/Graphics_Project_Using_OpenGL.dir/src/vendor/stb_image.cpp.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/Graphics_Project_Using_OpenGL.dir/src/vendor/stb_image.cpp.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vendor/stb_image.cpp",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vendor/stb_image.cpp",
+  "output": "CMakeFiles/Graphics_Project_Using_OpenGL.dir/src/vendor/stb_image.cpp.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/my_cxx_modules.dir/src/application.cc.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/my_cxx_modules.dir/src/application.cc.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/application.cc",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/application.cc",
+  "output": "CMakeFiles/my_cxx_modules.dir/src/application.cc.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/my_cxx_modules.dir/src/camera.cc.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/my_cxx_modules.dir/src/camera.cc.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/camera.cc",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/camera.cc",
+  "output": "CMakeFiles/my_cxx_modules.dir/src/camera.cc.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/my_cxx_modules.dir/src/index_buffer.cc.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/my_cxx_modules.dir/src/index_buffer.cc.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/index_buffer.cc",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/index_buffer.cc",
+  "output": "CMakeFiles/my_cxx_modules.dir/src/index_buffer.cc.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/my_cxx_modules.dir/src/shader_program.cc.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/my_cxx_modules.dir/src/shader_program.cc.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/shader_program.cc",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/shader_program.cc",
+  "output": "CMakeFiles/my_cxx_modules.dir/src/shader_program.cc.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/my_cxx_modules.dir/src/texture.cc.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/my_cxx_modules.dir/src/texture.cc.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/texture.cc",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/texture.cc",
+  "output": "CMakeFiles/my_cxx_modules.dir/src/texture.cc.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/my_cxx_modules.dir/src/vertex_array.cc.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/my_cxx_modules.dir/src/vertex_array.cc.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vertex_array.cc",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vertex_array.cc",
+  "output": "CMakeFiles/my_cxx_modules.dir/src/vertex_array.cc.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/my_cxx_modules.dir/src/vertex_buffer.cc.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/my_cxx_modules.dir/src/vertex_buffer.cc.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vertex_buffer.cc",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vertex_buffer.cc",
+  "output": "CMakeFiles/my_cxx_modules.dir/src/vertex_buffer.cc.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/my_cxx_modules.dir/src/vertex_buffer.layout.cc.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/my_cxx_modules.dir/src/vertex_buffer.layout.cc.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vertex_buffer.layout.cc",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vertex_buffer.layout.cc",
+  "output": "CMakeFiles/my_cxx_modules.dir/src/vertex_buffer.layout.cc.o"
+},
+{
+  "directory": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug",
+  "command": "g++ -I/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/./src/vendor -g -std=c++23 -fdiagnostics-color=always -fmodules-ts -fmodule-mapper=CMakeFiles/my_cxx_modules.dir/src/vertex_buffer.supported_types.cc.o.modmap -MD -fdeps-format=p1689r5 -x c++ -o CMakeFiles/my_cxx_modules.dir/src/vertex_buffer.supported_types.cc.o -c /home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vertex_buffer.supported_types.cc",
+  "file": "/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/src/vertex_buffer.supported_types.cc",
+  "output": "CMakeFiles/my_cxx_modules.dir/src/vertex_buffer.supported_types.cc.o"
+}
+]

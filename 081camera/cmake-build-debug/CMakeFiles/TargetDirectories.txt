@@ -1,0 +1,4 @@
+/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug/CMakeFiles/08camera.dir
+/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug/CMakeFiles/my_cxx_modules.dir
+/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera/cmake-build-debug/CMakeFiles/rebuild_cache.dir

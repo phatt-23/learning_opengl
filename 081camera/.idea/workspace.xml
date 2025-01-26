@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BackendCodeEditorMiscSettings">
+    <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
+    <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
+    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
+    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexRemoved" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="08camera" targetName="my_cxx_modules" />
+      <config projectName="08camera" targetName="08camera" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="57fdcf7e-0a64-44e3-ba50-5aeacd13ffff" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_demo.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_demo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_draw.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_draw.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_impl_glfw.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_impl_glfw.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_impl_opengl3.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_impl_opengl3.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_tables.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_tables.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_widgets.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/imgui_widgets.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/index_buffer.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/index_buffer.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/main.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/main.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/renderer.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/renderer.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/shader.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/shader.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/stb_image.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/stb_image.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/test.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/test.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/test_clear_color.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/test_clear_color.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/test_texture_2d.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/test_texture_2d.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/texture.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/texture.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/utils.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/utils.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/vertex_array.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/vertex_array.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/vertex_buffer.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/vertex_buffer.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/vertex_buffer_layout.o" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/obj/vertex_buffer_layout.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/program" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../OpenGL-dev/3d_opengl/debug/program" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../c_lang/neural_network/myprog" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../c_lang/neural_network/myprog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../c_lang/neural_network/src/mat.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../c_lang/neural_network/src/mat.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../c_lang/neural_network/src/mat.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../c_lang/neural_network/src/mat.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../c_lang/neural_network/src/nn.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../c_lang/neural_network/src/nn.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../python/karpathy" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../python/karpathy" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/shader_program.cc" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/texture.cc" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/vertex_buffer.layout.cc" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="JsbtTreeLayoutManager">
+    <layout place="tools.popupGrunt">
+      <scroll-view-position x="0" y="0" />
+    </layout>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2024" />
+    <option name="minorVersion" value="3.2" />
+    <option name="productBranch" value="Classic" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2s8tvdbBUoXpTUfWlbRDSfKHl2G" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/phatt/Programming/cpp_lang/modulesOpenGL/victor_gordan_opengl_series/08camera&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager" selected="CMake Application.08camera">
+    <configuration name="08camera" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="08camera" TARGET_NAME="08camera" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="08camera" RUN_TARGET_NAME="08camera">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="my_cxx_modules" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="08camera" TARGET_NAME="my_cxx_modules" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.08camera" />
+      <item itemvalue="CMake Application.my_cxx_modules" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="57fdcf7e-0a64-44e3-ba50-5aeacd13ffff" name="Changes" comment="" />
+      <created>1737849263742</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1737849263742</updated>
+      <workItem from="1737849266673" duration="301000" />
+      <workItem from="1737849583222" duration="1823000" />
+      <workItem from="1737851448024" duration="2532000" />
+      <workItem from="1737854144696" duration="88000" />
+      <workItem from="1737854241820" duration="18474000" />
+      <workItem from="1737912880884" duration="17837000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
