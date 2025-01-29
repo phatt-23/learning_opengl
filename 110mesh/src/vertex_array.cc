@@ -19,9 +19,14 @@ public:
         glGenVertexArrays(1, &vertexArrayID);
     }
 
+    /// Deconstructor that doesn't delete the 
+    /// the vertex array resource from OpenGL.
+    ~VertexArray() = default;
+
     /// Delete the VAO but not its references to the VBO or IBO.
-    ~VertexArray() {
+    auto deleteResource() -> void {
         glDeleteVertexArrays(1, &vertexArrayID);
+        vertexArrayID = 0;
     }
 
     /// Links the VBO its layout and IBO. This class does not keep any references to them only OpenGL does.

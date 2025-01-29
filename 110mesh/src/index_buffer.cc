@@ -37,9 +37,15 @@ public:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    /// Deletes the buffer and its data store.
-    ~IndexBuffer() {
+    /// Deconstructor that doesn't delete the 
+    /// the element array buffer because that
+    /// a resource of OpenGL.
+    ~IndexBuffer() = default;
+    
+    /// Deletes the element array buffer from OpenGL.
+    auto deleteResource() -> void {
         glDeleteBuffers(1, &elementArrayBufferID);
+        elementArrayBufferID = 0;
     }
 
     [[nodiscard]] auto getElementCount() const -> GLsizei {

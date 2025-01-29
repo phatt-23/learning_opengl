@@ -40,9 +40,14 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
+    /// Deconstructor that doesn't delete the the 
+    /// array buffer because that's a resource of OpenGL.
+    ~VertexBuffer() = default;
+
     /// Deletes the buffer and its data store.
-    ~VertexBuffer() {
+    auto deleteResource() -> void {
         glDeleteBuffers(1, &arrayBufferID);
+        arrayBufferID = 0;
     }
 
     auto bind() const -> void {

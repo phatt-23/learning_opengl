@@ -165,34 +165,40 @@ private:
         };
 
     	// The pyramid object.
-        const auto floorVertexBuffer = VertexBuffer(floorVertices);
-        const auto floorIndexBuffer = IndexBuffer(floorIndices);
-        const auto floorVertexArray = VertexArray();
-        floorVertexArray.linkVertexBufferAndIndexBuffer(
-        	floorVertexBuffer,
-            Vertex::getLayout(),
-        	floorIndexBuffer);
+        auto floorMesh = Mesh(floorVertices, floorIndices, floorTextures);
+        // const auto floorVertexBuffer = VertexBuffer(floorVertices);
+        // const auto floorIndexBuffer = IndexBuffer(floorIndices);
+        // const auto floorVertexArray = VertexArray();
+        // floorVertexArray.linkVertexBufferAndIndexBuffer(
+        // 	floorVertexBuffer,
+        //     Vertex::getLayout(),
+        // 	floorIndexBuffer
+        // );
 
         auto floorShader = ShaderProgram("./shaders/floor.glsl");
-        Texture::setSamplerInShader(floorShader, "U_Material.DiffuseMap0", 0);
-        Texture::setSamplerInShader(floorShader, "U_Material.SpecularMap0", 1);
+        // Texture::setSamplerInShader(floorShader, "U_Material.DiffuseMap0", 0);
+        // Texture::setSamplerInShader(floorShader, "U_Material.SpecularMap0", 1);
 
 		// The light cube object.
-    	const auto lightCubeVertexBuffer = VertexBuffer(lightVertices);
-    	const auto lightCubeIndexBuffer = IndexBuffer(lightIndices);
-    	const auto lightCubeVertexArray = VertexArray();
-    	lightCubeVertexArray.linkVertexBufferAndIndexBuffer(
-    		lightCubeVertexBuffer,
-            Vertex::getLayout(),
-    		lightCubeIndexBuffer);
+        auto lightCubeMesh = Mesh(lightVertices, lightIndices, {});
+        // const auto lightCubeVertexBuffer = VertexBuffer(lightVertices);
+        // const auto lightCubeIndexBuffer = IndexBuffer(lightIndices);
+        // const auto lightCubeVertexArray = VertexArray();
+        // lightCubeVertexArray.linkVertexBufferAndIndexBuffer(
+        //     lightCubeVertexBuffer,
+        //     Vertex::getLayout(),
+        //     lightCubeIndexBuffer
+        // );
 
     	auto lightCubeColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
     	auto lightCubeModelMat = glm::mat4(1.0f);
     	auto lightCubePositionVec = glm::vec3(0.5f, 0.5f, 0.5f);
     	auto lightCubeTranslationMat = glm::translate(lightCubeModelMat, lightCubePositionVec);
     	lightCubeModelMat = lightCubeTranslationMat;
 
     	auto lightCubeShader = ShaderProgram("./shaders/light_cube.glsl");
+
 		lightCubeShader.bind();
     	lightCubeShader.setUniform4f("U_ColorVec4", lightCubeColor);
 		lightCubeShader.setUniformMat4f("U_ModelMat4", lightCubeModelMat);
@@ -202,7 +208,6 @@ private:
     	floorShader.setUniform4f("U_LightColorVec4", lightCubeColor);
     	floorShader.setUniform3f("U_LightPositionVec3", lightCubePositionVec);
     	ShaderProgram::unbind();
-
 
         // Rotation of the object using the model matrix
         float rotationInDegrees = 0.0f;
@@ -223,9 +228,9 @@ private:
             // Update objects in the scene
             this->onUpdate();
 
-            // Send the camera's inverse model matrix to the shader GPU code.
-            camera.sendProjectionViewMatToShader(floorShader, "U_CameraProjViewMat4");
-            camera.sendPositionToShader(floorShader, "U_CameraPositionVec3");
+            // Send the camera's inverse model-projection matrix to the shader GPU code.
+            // camera.sendProjectionViewMatToShader(floorShader, "U_CameraProjViewMat4");
+            // camera.sendPositionToShader(floorShader, "U_CameraPositionVec3");
     		camera.sendProjectionViewMatToShader(lightCubeShader, "U_CameraProjViewMat4");
 
         	// Send the floor to the shader code.
@@ -243,22 +248,24 @@ private:
         	// No setting is done.
 
         	// Draw the floor.
-            floorTextures[0].bindToLastSlot();
-            floorTextures[1].bindToLastSlot();
-            floorShader.bind();
-            floorVertexArray.bind();
-            glDrawElements(GL_TRIANGLES, floorIndexBuffer.getElementCount(), GL_UNSIGNED_INT, nullptr);
-            floorTextures[0].unbind();
-            floorTextures[1].unbind();
-            ShaderProgram::unbind();
-            VertexArray::unbind();
+            floorMesh.draw(floorShader, camera);
+            // floorTextures[0].bindToLastSlot();
+            // floorTextures[1].bindToLastSlot();
+            // floorShader.bind();
+            // floorVertexArray.bind();
+            // glDrawElements(GL_TRIANGLES, floorIndexBuffer.getElementCount(), GL_UNSIGNED_INT, nullptr);
+            // floorTextures[0].unbind();
+            // floorTextures[1].unbind();
+            // ShaderProgram::unbind();
+            // VertexArray::unbind();
 
 			// Draw the light cube.
-			lightCubeShader.bind();
-			lightCubeVertexArray.bind();
-        	glDrawElements(GL_TRIANGLES, lightCubeIndexBuffer.getElementCount(), GL_UNSIGNED_INT, nullptr);
-            ShaderProgram::unbind();
-            VertexArray::unbind();
+            lightCubeMesh.draw(lightCubeShader, camera);
+            // lightCubeShader.bind();
+            // lightCubeVertexArray.bind();
+            // glDrawElements(GL_TRIANGLES, lightCubeIndexBuffer.getElementCount(), GL_UNSIGNED_INT, nullptr);
+            // ShaderProgram::unbind();
+            // VertexArray::unbind();
 
             // Render the objects to the window
             this->onRender();

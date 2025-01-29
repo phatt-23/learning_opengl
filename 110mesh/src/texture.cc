@@ -172,39 +172,24 @@ public:
     }
 
     /// Copy constructor.
-    Texture(const Texture& other) 
-        : textureID(other.textureID)
-        , textureDimension(other.textureDimension)
-        , dataFormat(other.dataFormat)
-        , textureType(other.textureType)
-        , width(other.width) 
-        , height(other.height)
-        , channels(other.channels)
-        , lastTextureUnitSlotIndex(other.lastTextureUnitSlotIndex)
-    {
-        std::cout << "Texture: Copy constructor.\n";
-        this->filepath = other.filepath;
-        std::cout << this->filepath << std::endl;
-        std::cout << this->textureID << std::endl;
-        std::cout << DimensionToString(textureDimension) << std::endl;
-        std::cout << DataFormatToString(dataFormat) << std::endl;
-        std::cout << TypeToString(textureType) << std::endl;
-    }
+    // Texture(const Texture& other) {
+    //     std::cout << "Texture: Copy constructor.\n";
+    // }
 
-    /// Copy constructor assignment.
-    Texture& operator=(const Texture& other) {
-        std::cout << "Texture: Copy constructor assignment.\n";
-    }
+    /// Copy constructor by assignment operator.
+    // Texture& operator=(const Texture& other) {
+    //     std::cout << "Texture: Copy constructor assignment.\n";
+    // }
 
     /// Move constructor.
-    Texture(Texture&& other) noexcept {
-        std::cout << "Texture: Move constructor.\n";
-    }
+    // Texture(Texture&& other) noexcept {
+    //     std::cout << "Texture: Move constructor.\n";
+    // }
 
-    /// Move assignment constructor.
-    Texture& operator=(Texture&& other) noexcept {
-        std::cout << "Texture: Move assignment constructor.\n";
-    }
+    /// Move constructor by assignment operator.
+    // Texture& operator=(Texture&& other) noexcept {
+    //     std::cout << "Texture: Move assignment constructor.\n";
+    // }
 
     /// Cannot have code for deletion of the OpenGL resouce.
     /// That would fuck up the copy semantics and I want them enabled.
@@ -285,9 +270,9 @@ public:
     ) -> void {
         // Make sure to bind the shader program first.
         // Bind the shader to send the texture object to the texture unit
+        // std::cout << "In " << shader.getSourceFilePath() << ": " << uniformSamplerVariableName << " = " << textureUnitSlotIndex << "\n";
         shader.bind();
         shader.setUniform1i(uniformSamplerVariableName, textureUnitSlotIndex);
-        std::cout << "In " << shader.getSourceFilePath() << ": " << uniformSamplerVariableName << " = " << textureUnitSlotIndex << "\n";
         ShaderProgram::unbind();
     }
 };

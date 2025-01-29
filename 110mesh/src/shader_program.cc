@@ -125,9 +125,14 @@ public:
         this->shaderProgramID = createShaderProgramObject(sources);
     }
 
-    ~ShaderProgram() {
-        // Destroy the shader program.
+    /// Deconstructor that doesn't delete the 
+    /// the shader program belonging to OpenGL.
+    ~ShaderProgram() = default;
+
+    /// Destroy the shader program.
+    auto deleteProgram() -> void {
         glDeleteProgram(this->shaderProgramID);
+        shaderProgramID = 0;
     }
 
     auto getSourceFilePath() const -> const std::string& {
