@@ -21,12 +21,11 @@ out vec3 OV_CurrentPositionVec3;
 void main() {
     OV_CurrentPositionVec3 = vec3(U_ModelMat4 * vec4(AV_PositionVec3, 1.f));
 
+    gl_Position = U_CameraProjViewMat4 * vec4(OV_CurrentPositionVec3, 1.f);
     // Sending the attribute variables further down the pipeline (to the fragment shader)
-    OV_NormalVec3 = AV_NormalVec3;
     OV_ColorVec3 = AV_ColorVec3;
     OV_TextureCoordinatesVec2 = AV_TextureCoordinatesVec2;
-
-    gl_Position = U_CameraProjViewMat4 * vec4(OV_CurrentPositionVec3, 1.f);
+    OV_NormalVec3 = AV_NormalVec3;
 }
 
 /// #shader fragment //////////////////////////////////////////////////////////////////////////
@@ -45,20 +44,11 @@ uniform vec3 U_LightPositionVec3;
 // Eye position.
 uniform vec3 U_CameraPositionVec3;
 // Tells OpenGL which texture unit it should use. It is an integer.
-
-struct Material {
-    sampler2D DiffuseMap0, 
-        DiffuseMap1, 
-        DiffuseMap2;
-    sampler2D SpecularMap0,
-        SpecularMap1,
-        SpecularMap2;
-};
-
-uniform Material U_Material;
+uniform sampler2D U_Texture0;
+uniform sampler2D U_Texture1;
 
 // Output the fragment color.
-out vec4 OF_FragmentColorVec4;
+out vec4 OF_FragmentColor;
 
 /// The light source is so distant that the light rays emitted 
 /// are parallel to one another. It has no dimming/decay of light intensity.
@@ -203,31 +193,29 @@ vec4 spotLight(
 }
 
 void main() {
-    OF_FragmentColorVec4 = vec4(1.f, 0.f, 1.f, 1.f);
-
-    OF_FragmentColorVec4 = pointLight(
+    OF_FragmentColor = pointLight(
         3.0f, 0.7f,
         U_LightPositionVec3,
         OV_CurrentPositionVec3,
         U_CameraPositionVec3,
         OV_NormalVec3,
-        U_Material.DiffuseMap0,
-        U_Material.SpecularMap0,
+        U_Texture0,
+        U_Texture1,
         OV_TextureCoordinatesVec2
     );
 
-    OF_FragmentColorVec4 += directionalLight(
+    OF_FragmentColor += directionalLight(
         vec3(1.0f, 1.0f, 0.0f),
         U_LightColorVec4,
         OV_CurrentPositionVec3,
         U_CameraPositionVec3,
         OV_NormalVec3,
-        U_Material.DiffuseMap0,
-        U_Material.SpecularMap0,
+        U_Texture0,
+        U_Texture1,
         OV_TextureCoordinatesVec2
     );
 
-    OF_FragmentColorVec4 += spotLight(
+    OF_FragmentColor += spotLight(
         vec3(0.f, -1.f, 0.f), cos(radians(30.f)), cos(radians(40.f)),
         3.0f, 0.7f,
         U_LightColorVec4,
@@ -235,8 +223,8 @@ void main() {
         OV_CurrentPositionVec3,
         U_CameraPositionVec3,
         OV_NormalVec3,
-        U_Material.DiffuseMap0,
-        U_Material.SpecularMap0,
+        U_Texture0,
+        U_Texture1,
         OV_TextureCoordinatesVec2
     );
 }

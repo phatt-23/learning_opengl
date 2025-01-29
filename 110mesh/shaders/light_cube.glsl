@@ -1,7 +1,7 @@
 /// #shader vertex
 #version 330 core
 
-layout(location = 0) in vec3 AV_PositionVec3;
+layout(location = 0) in vec3 AV_PositionVec3; // Attribute variable in the Vertex shader
 
 uniform mat4 U_ModelMat4;
 uniform mat4 U_CameraProjViewMat4;

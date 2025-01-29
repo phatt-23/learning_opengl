@@ -73,7 +73,9 @@ using namespace texture;
 /// which slot it goes to.
 export class Texture {
 private:
-    const std::string filepath; // The filepath to the texture image. Useful for debugging.
+    // This was previously 'const' but with that, the compiler will delete the copy assignment operator.
+    // Making it non copyable - cannot push to vectors and stuff.
+    std::string filepath; // The filepath to the texture image. Useful for debugging.
     GLuint textureID = 0; // The reference ID to the OpenGL texture object.
     Dimension textureDimension; // Can 1D, 2D or 3D. Most common is GL_TEXTURE_2D.
     DataFormat dataFormat; // If it's JPG, use GL_RGB, if it's PNG use GL_RGBA.
@@ -88,7 +90,7 @@ public:
     /// being stored inside this class and is used in binding/unbinding functions.
     /// CAUTION: Expects the texture unit slot to be a regular number not OpenGL macro.
     ///          The `dataFormat` must be specified when using depth or depth-stencil textures.
-    explicit Texture(
+    Texture(
         const std::string& filepath,
         const Dimension dimension,
         const Type type,
@@ -169,22 +171,68 @@ public:
         glBindTexture(static_cast<GLenum>(textureDimension), 0);
     }
 
-    ~Texture() {
-        // Frees the texture object with reference ID of `textureID` from the GPU.
-        glDeleteTextures(1, &textureID);
+    /// Copy constructor.
+    Texture(const Texture& other) 
+        : textureID(other.textureID)
+        , textureDimension(other.textureDimension)
+        , dataFormat(other.dataFormat)
+        , textureType(other.textureType)
+        , width(other.width) 
+        , height(other.height)
+        , channels(other.channels)
+        , lastTextureUnitSlotIndex(other.lastTextureUnitSlotIndex)
+    {
+        std::cout << "Texture: Copy constructor.\n";
+        this->filepath = other.filepath;
+        std::cout << this->filepath << std::endl;
+        std::cout << this->textureID << std::endl;
+        std::cout << DimensionToString(textureDimension) << std::endl;
+        std::cout << DataFormatToString(dataFormat) << std::endl;
+        std::cout << TypeToString(textureType) << std::endl;
+    }
+
+    /// Copy constructor assignment.
+    Texture& operator=(const Texture& other) {
+        std::cout << "Texture: Copy constructor assignment.\n";
+    }
+
+    /// Move constructor.
+    Texture(Texture&& other) noexcept {
+        std::cout << "Texture: Move constructor.\n";
+    }
+
+    /// Move assignment constructor.
+    Texture& operator=(Texture&& other) noexcept {
+        std::cout << "Texture: Move assignment constructor.\n";
+    }
+
+    /// Cannot have code for deletion of the OpenGL resouce.
+    /// That would fuck up the copy semantics and I want them enabled.
+    ~Texture() = default;
+
+    /// Frees the texture object with reference ID of `textureID` from the GPU.
+    /// This code musn't be in the decostructor. That would fuck up the copy semantics.
+    auto DeleteResource() -> void {
+        if (textureID != 0) {
+            glDeleteTextures(1, &textureID);
+        }
+        textureID = 0;
     }
 
     /// Binds texture object to specified texture unit slot.
     /// CAUTION: Expects the texture unit slot to be a regular number and not the OpenGL macro.
-    auto bind(const GLint textureUnitSlotIndex) -> void {
+    auto bindToSlot(const GLint textureUnitSlotIndex) -> void {
         glActiveTexture(GL_TEXTURE0 + textureUnitSlotIndex);
         glBindTexture(static_cast<GLenum>(textureDimension), textureID);
         lastTextureUnitSlotIndex = textureUnitSlotIndex;
+        // std::cout << "Binding " << filepath << " to slot " << lastTextureUnitSlotIndex << std::endl;
     }
 
-    auto bind() const -> void {
+    /// Binds to the last slot it was in.
+    auto bindToLastSlot() const -> void {
         glActiveTexture(GL_TEXTURE0 + lastTextureUnitSlotIndex);
         glBindTexture(static_cast<GLenum>(textureDimension), textureID);
+        // std::cout << "Binding " << filepath << " to last slot " << lastTextureUnitSlotIndex << std::endl;
     }
 
     /// Unbinds texture object from the texture unit slot
@@ -199,6 +247,10 @@ public:
 
     auto getType() const -> Type {
         return textureType;
+    }
+
+    auto getFilePath() const -> const std::string& {
+        return filepath;
     }
 
     /// TODO: This is not correct. This function can be static.

@@ -153,29 +153,46 @@ private:
 
     // Represents the main game loop.
     auto mainLoop() -> void {
-        // Create camera object.
+            // Create camera object.
         auto camera = Camera(this->window, 2.f, glm::vec3(0.0f, 0.0f, 4.0f));
         // Create mouse singleton instance.
         Mouse::createInstance(this->window, 0.6f);
 
-    	// The floor object.
+        // Creating texture object and sending it to the shader code's uniform sampler variable.
         auto floorTextures = std::vector<Texture> {
-            Texture("./textures/brick.png", texture::Dimension::$2D, texture::Type::DiffuseMap, texture::DataFormat::RGBA, 0),
+            Texture("./textures/planks.png", texture::Dimension::$2D, texture::Type::DiffuseMap, texture::DataFormat::RGBA, 0),
             Texture("./textures/planksSpec.png", texture::Dimension::$2D, texture::Type::SpecularMap, texture::DataFormat::R, 1),
         };
+
+    	// The pyramid object.
+        const auto floorVertexBuffer = VertexBuffer(floorVertices);
+        const auto floorIndexBuffer = IndexBuffer(floorIndices);
+        const auto floorVertexArray = VertexArray();
+        floorVertexArray.linkVertexBufferAndIndexBuffer(
+        	floorVertexBuffer,
+            Vertex::getLayout(),
+        	floorIndexBuffer);
+
         auto floorShader = ShaderProgram("./shaders/floor.glsl");
-        auto floorMesh = Mesh(floorVertices, floorIndices, floorTextures);
+        Texture::setSamplerInShader(floorShader, "U_Material.DiffuseMap0", 0);
+        Texture::setSamplerInShader(floorShader, "U_Material.SpecularMap0", 1);
 
 		// The light cube object.
-    	auto lightCubeShader = ShaderProgram("./shaders/light_cube.glsl");
-        auto lightCubeMesh = Mesh(lightVertices, lightIndices, {});
+    	const auto lightCubeVertexBuffer = VertexBuffer(lightVertices);
+    	const auto lightCubeIndexBuffer = IndexBuffer(lightIndices);
+    	const auto lightCubeVertexArray = VertexArray();
+    	lightCubeVertexArray.linkVertexBufferAndIndexBuffer(
+    		lightCubeVertexBuffer,
+            Vertex::getLayout(),
+    		lightCubeIndexBuffer);
 
+    	auto lightCubeColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     	auto lightCubeModelMat = glm::mat4(1.0f);
-    	const auto lightCubePositionVec = glm::vec3(0.5f, 0.5f, 0.5f);
-    	const auto lightCubeTranslationMat = glm::translate(lightCubeModelMat, lightCubePositionVec);
+    	auto lightCubePositionVec = glm::vec3(0.5f, 0.5f, 0.5f);
+    	auto lightCubeTranslationMat = glm::translate(lightCubeModelMat, lightCubePositionVec);
     	lightCubeModelMat = lightCubeTranslationMat;
-    	const auto lightCubeColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
+    	auto lightCubeShader = ShaderProgram("./shaders/light_cube.glsl");
 		lightCubeShader.bind();
     	lightCubeShader.setUniform4f("U_ColorVec4", lightCubeColor);
 		lightCubeShader.setUniformMat4f("U_ModelMat4", lightCubeModelMat);
@@ -186,25 +203,23 @@ private:
     	floorShader.setUniform3f("U_LightPositionVec3", lightCubePositionVec);
     	ShaderProgram::unbind();
 
-        auto floorTranslationMat = glm::mat4(1.f);
-        auto floorPositionVec = glm::vec3(0.f, -0.5f, 0.f);
-        floorTranslationMat = glm::translate(floorTranslationMat, floorPositionVec);
-        auto floorModelMat = floorTranslationMat;
-        floorShader.bind();
-        floorShader.setUniformMat4f("U_ModelMat4", floorModelMat);
-        ShaderProgram::unbind();
 
-        float rotationInDegrees = 0.f;
+        // Rotation of the object using the model matrix
+        float rotationInDegrees = 0.0f;
 
         while (!glfwWindowShouldClose(this->window)) {
             // Poll events, handle resizing of the window
             this->onNextFrame();
-            Timer::getInstance().onNextFrame(); // Update the delta time for the current frame.
-            Mouse::getInstance().onNextFrame(); // Handled user input and update the camera's internal variables - position and look at direction.
-            camera.onNextFrame(this->window, Timer::getInstance().getDeltaTime()); 
-            camera.updateProjectionViewMatrix(); // Recalculates the projection-view matrix.
-            Mouse::getInstance().resetLastCursorPosition(); // Resets the mouse after all of its user are done using it. TODO: Observer pattern maybe.
+            // Update the delta time for the current frame.
+            Timer::getInstance().onNextFrame();
+            Mouse::getInstance().onNextFrame();
+            // Handled user input and update the camera's internal variables - position and look at direction.
+            camera.onNextFrame(this->window, Timer::getInstance().getDeltaTime());
+            camera.updateProjectionViewMatrix();
+            // Resets the mouse after all of its user are done using it. TODO: Observer pattern.
+            Mouse::getInstance().resetLastCursorPosition();
                 
+
             // Update objects in the scene
             this->onUpdate();
 
@@ -213,7 +228,7 @@ private:
             camera.sendPositionToShader(floorShader, "U_CameraPositionVec3");
     		camera.sendProjectionViewMatToShader(lightCubeShader, "U_CameraProjViewMat4");
 
-        	// Send the pyramid to the shader code.
+        	// Send the floor to the shader code.
             auto rotationMat = glm::mat4(1.0f);
             auto translationMat = glm::mat4(1.0f);
             rotationInDegrees += 10.f * Timer::getInstance().f32getDeltaTime();
@@ -224,18 +239,26 @@ private:
             floorShader.setUniformMat4f("U_ModelMat4", modelMat);
             ShaderProgram::unbind();
 
-            floorMesh.draw(floorShader, camera);
-            // floorTextures[0].bind(0);
-            // floorTextures[1].bind(1);
-            // floorShader.bind();
-            // floorMesh.getVertexArray().bind();
-            // glDrawElements(GL_TRIANGLES, floorIndices.size(), GL_UNSIGNED_INT, nullptr);
-            // floorTextures[0].unbind();
-            // floorTextures[1].unbind();
-            // ShaderProgram::unbind();
-            // VertexArray::unbind();
-            //
-            // lightCubeMesh.draw(lightCubeShader, camera);
+			// The light cube's shader code variables stays the same.
+        	// No setting is done.
+
+        	// Draw the floor.
+            floorTextures[0].bindToLastSlot();
+            floorTextures[1].bindToLastSlot();
+            floorShader.bind();
+            floorVertexArray.bind();
+            glDrawElements(GL_TRIANGLES, floorIndexBuffer.getElementCount(), GL_UNSIGNED_INT, nullptr);
+            floorTextures[0].unbind();
+            floorTextures[1].unbind();
+            ShaderProgram::unbind();
+            VertexArray::unbind();
+
+			// Draw the light cube.
+			lightCubeShader.bind();
+			lightCubeVertexArray.bind();
+        	glDrawElements(GL_TRIANGLES, lightCubeIndexBuffer.getElementCount(), GL_UNSIGNED_INT, nullptr);
+            ShaderProgram::unbind();
+            VertexArray::unbind();
 
             // Render the objects to the window
             this->onRender();

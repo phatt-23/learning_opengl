@@ -29,11 +29,9 @@ public:
         const std::vector<GLuint>& indices,
         const std::vector<Texture>& textures
     ) : vertices(vertices), indices(indices), textures(textures) {
-        vertexArray.linkVertexBufferAndIndexBuffer(
-            VertexBuffer(vertices),
-            Vertex::getLayout(),
-            IndexBuffer(indices)
-        );
+        VertexBuffer vbo(vertices);
+        IndexBuffer ibo(indices);
+        vertexArray.linkVertexBufferAndIndexBuffer(vbo, Vertex::getLayout(), ibo);
     }
 
     auto getVertexArray() -> VertexArray& {
@@ -52,14 +50,15 @@ public:
                 switch (textures[i].getType()) {
                     case texture::Type::DiffuseMap: { return diffuseNumber++; } break;
                     case texture::Type::SpecularMap: { return specularNumber++; } break;
+                    default: throw std::runtime_error("Unknown texture type");
                 }
             }();
 
             const std::string uniformName = "U_Material." + type + std::to_string(number);
             Texture::setSamplerInShader(shader, uniformName, slot);
 
-            // textures[i].bind();
-            textures[i].bind(slot);
+            // textures[i].bindToLast();
+            textures[i].bindToSlot(slot);
         }
 
         camera.sendPositionToShader(shader, "U_CameraPositionVec3");
