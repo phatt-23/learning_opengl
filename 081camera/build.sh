@@ -45,21 +45,23 @@ function build_routine {
   # Compiling vendor sources.
   clang++ -c $VENDOR_DIR/stb_image.cpp -o $OBJECT_DIR/stb_image.cpp.o $COMMON_FLAGS
 
-  # Compiling modules, making sure to keep the correct topological ordering.
-  # Im listing out dependencies before the function calls.
+  ## Compiling modules, making sure to keep the correct topological ordering.
+  # Im listing out module dependencies before the function calls.
+  # nothing
+  compile_module_into_pcm_and_object_file timer
+  compile_module_into_pcm_and_object_file mouse
+  compile_module_into_pcm_and_object_file index_buffer
   compile_module_into_pcm_and_object_file vertex_buffer.supported_types
   compile_module_into_pcm_and_object_file vertex_buffer.layout
+  compile_module_into_pcm_and_object_file shader_program
   # vertex_buffer.supported_types vertex_buffer.layout
   compile_module_into_pcm_and_object_file vertex_buffer
-  compile_module_into_pcm_and_object_file index_buffer
-  # vertex_buffer index_buffer
-  compile_module_into_pcm_and_object_file vertex_array
-  compile_module_into_pcm_and_object_file shader_program
-  # shader_program
-  compile_module_into_pcm_and_object_file camera
   # shader_program
   compile_module_into_pcm_and_object_file texture
-  compile_module_into_pcm_and_object_file timer
+  # shader_program mouse
+  compile_module_into_pcm_and_object_file camera
+  # vertex_buffer index_buffer
+  compile_module_into_pcm_and_object_file vertex_array
   # everything
   compile_module_into_pcm_and_object_file application
 

@@ -4,11 +4,11 @@
 
 module;
 
+#include "std.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "std.h"
 
 export module application;
 
@@ -19,6 +19,7 @@ import vertex_buffer;
 import texture;
 import camera;
 import timer;
+import mouse;
 
 export class Application
 {
@@ -141,40 +142,45 @@ private:
         const auto vertexArray = VertexArray();
         vertexArray.linkVertexBufferWithIndices(vertexBuffer, layout, indexBuffer);
         // Creating texture object and sending it to the shader code's uniform sampler variable.
-        auto texture = Texture("./textures/ISO_C++_Logo.png", GL_TEXTURE_2D, 0);
+        auto texture = Texture("./textures/ISO_C++_Logo.png", texture::Type::$2D);
         texture.sendTextureToShader(shaderProgram, "U_Texture0", 0);
 
         // Create camera object.
         auto camera = Camera(this->window, 2.f, glm::vec3(0.0f, 0.0f, 4.0f));
 
+        // Create mouse singleton instance.
+        Mouse::createInstance(this->window, 0.3f);
+
+        // glfwSetCursorPosCallback(this->window, [](GLFWwindow* window, double xpos, double ypos) {
+        //     std::cout << "glfwSetCursorPosCallback: " << xpos << ", " << ypos << std::endl;
+        // });
+
         // Rotation of the object using the model matrix
         float rotationInDegrees = 0.0f;
-        double previousTime = glfwGetTime();
 
         while (!glfwWindowShouldClose(this->window)) {
             // Poll events, handle resizing of the window
             this->onNextFrame();
             // Update the delta time for the current frame.
             Timer::getInstance().onNextFrame();
+            Mouse::getInstance().onNextFrame();
             // Handled user input and update the camera's internal variables - position and look at direction.
             camera.onNextFrame(this->window, Timer::getInstance().getDeltaTime());
+            camera.updateViewProjectionMatrix();
+            // Resets the mouse.
+            Mouse::getInstance().resetLastCursorPosition();
 
             // Update objects in the scene
             this->onUpdate();
             // Send the camera's matrix to the shader GPU code.
             camera.sendViewProjectionMatToShader(shaderProgram, "U_CameraViewProjectionMat4");
 
-            // Every 1/60 seconds add half a degree to the rotation.
-            if (const double currentTime = glfwGetTime(); currentTime - previousTime >= 1/60) {
-                rotationInDegrees += 0.5f;
-                previousTime = currentTime;
-            }
-
             // The object is in tha same position as it was
             // because these are unit vectors.
             auto model = glm::mat4(1.0f);
             auto view = glm::mat4(1.0f);
             // Make the model rotate by some amount around specified axis.
+            rotationInDegrees += Timer::getInstance().f32getDeltaTime();
             model = glm::rotate(model, glm::radians(rotationInDegrees), glm::vec3(0.0f, 1.0f, 0.0f));
             // Moving the object lower (y coord) and closer (z coord).
             view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -198,6 +204,7 @@ private:
 
             // Render the objects to the window
             this->onRender();
+
         }
     }
 

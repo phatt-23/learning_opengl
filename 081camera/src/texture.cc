@@ -3,13 +3,59 @@
 //
 module;
 
-#include <GL/glew.h>
 #include "std.h"
+#include <GL/glew.h>
 #include "stb_image.h"
 
 export module texture;
 
 import shader_program;
+
+export namespace texture {
+    enum class Type : GLenum {
+        $1D = GL_TEXTURE_1D,
+        $2D = GL_TEXTURE_2D,
+        $3D = GL_TEXTURE_3D,
+    };
+
+
+    enum class DataFormat : GLenum {
+        NotSpecified = 0,
+        R = GL_RED,
+        RG = GL_RG,
+        RGB = GL_RGB,
+        RGBA = GL_RGBA,
+        DepthComponent = GL_DEPTH_COMPONENT,
+        DepthStencil = GL_DEPTH_STENCIL,
+    };
+
+    std::string textureTypeToString(const Type type) {
+        switch (type) {
+            case Type::$1D: return "1D"; break;
+            case Type::$2D: return "2D"; break;
+            case Type::$3D: return "3D"; break;
+            default: return "unknown"; break;
+        }
+    }
+
+    auto textureDataFormatToString(const DataFormat dataFormat) -> std::string {
+        switch (dataFormat) {
+            case DataFormat::NotSpecified: return "notspecified"; break;
+            case DataFormat::R: return "r"; break;
+            case DataFormat::RG: return "RG"; break;
+            case DataFormat::RGB: return "RGB"; break;
+            case DataFormat::RGBA: return "RGBA"; break;
+            case DataFormat::DepthComponent: return "depthcomponent"; break;
+            case DataFormat::DepthStencil: return "depthstencil"; break;
+            default: return "unknown"; break;
+        }
+    }
+}
+
+using namespace texture;
+
+
+
 
 /// Wrapper class over the OpenGL texture object.
 /// This class does not hold information about which slot to put the texture object into.
@@ -19,23 +65,26 @@ export class Texture {
 private:
     const std::string filepath; // The filepath to the texture image. Useful for debugging.
     GLuint textureID = 0; // The reference ID to the OpenGL texture object.
-    GLenum textureType = GL_TEXTURE_2D; // Can 1D, 2D or 3D. Most common is GL_TEXTURE_2D.
-    GLenum dataFormat = GL_RGBA; // If it's JPG, use GL_RGB, if it's PNG use GL_RGBA.
+    Type textureType; // Can 1D, 2D or 3D. Most common is GL_TEXTURE_2D.
+    DataFormat dataFormat; // If it's JPG, use GL_RGB, if it's PNG use GL_RGBA.
     int width = 0; // Width of the texture image in pixels.
     int height = 0; // Height of the texture image in pixels.
     int channels = 0; // Bits per pixel. Usually 3 or 4.
-    unsigned int lastTextureUnitSlotIndex = 0;  // For correct unbinding of the texture objects.
+    int lastTextureUnitSlotIndex = 0;  // For correct unbinding of the texture objects.
 public:
     /// Note that the `textureUnitSlot` is used only for the texture initialisation.
     /// It is not stored in this class at all. On the other hand, the `textureType` is
     /// being stored inside this class and is used in binding/unbinding functions.
     /// CAUTION: Expects the texture unit slot to be a regular number not OpenGL macro.
+    ///          The `dataFormat` must be specified when using depth or depth-stencil textures.
     explicit Texture(
-        std::string filepath,
-        const GLenum textureType = GL_TEXTURE_2D,
-        const GLuint textureUnitSlot = 0
+        const std::string& filepath,
+        const Type type,
+        const DataFormat format = DataFormat::NotSpecified,
+        const int textureUnitSlot = 0
         )
-    : filepath(std::move(filepath)), textureType(textureType), lastTextureUnitSlotIndex(textureUnitSlot) {
+    : filepath(filepath), textureType(type), dataFormat(format)
+    , lastTextureUnitSlotIndex(textureUnitSlot) {
         printf("Loading texture %s\n", this->filepath.c_str());
         // Creating OpenGL texture object and loading the texture to the CPU.
         // OpenGL read the data from left to right, bottom up while STB lib reads left to right, top to bottom.
@@ -49,24 +98,21 @@ public:
             throw std::runtime_error("Failed to load texture: " + filepath + "\n");
         }
 
-        // Based on the number of channels get the OpenGL format
+        // If the dataFormat was not specified make an assumption
+        // that the texture is of formats R, RG, RGB or RGBA
+        // based on the number of channels get the OpenGL format
         // by which we will transfer the data from CPU to GPU.
-        GLint internalFormat = 0; // This internal format should be the same as the `dataFormat` member variable.
-        switch (channels) {
-            case 1:
-                internalFormat = GL_RED;
-                dataFormat = GL_RED;
-            break;
-            case 3:
-                internalFormat = GL_RGB;
-                dataFormat = GL_RGB;
-            break;
-            case 4:
-                internalFormat = GL_RGBA;
-                dataFormat = GL_RGBA;
-            break;
-            default:
-                throw std::runtime_error(std::format("Error while loading '{}' because of unsupported number of channels: {}", this->filepath, channels));
+        if (dataFormat == DataFormat::NotSpecified) {
+            switch (channels) {
+                case 1: { dataFormat = DataFormat::R; } break;
+                case 2: { dataFormat = DataFormat::RG; } break;
+                case 3: { dataFormat = DataFormat::RGB; } break;
+                case 4: { dataFormat = DataFormat::RGBA; } break;
+                default: { throw std::runtime_error(
+                        std::format("Error while loading '{}' because of unsupported number of channels: {}",
+                            this->filepath, channels));
+                }
+            }
         }
 
         // Generate the texture object ID.
@@ -75,33 +121,41 @@ public:
         // Activate the slot where we will put the created texture object.
         glActiveTexture(GL_TEXTURE0 + textureUnitSlot);
         // Putting it into the specified slot.
-        glBindTexture(textureType, textureID);
+        glBindTexture(static_cast<GLenum>(textureType), textureID);
 
         // Setting texture parameters.
         // Configure how will the image behave when it becomes smaller and bigger.
-        glTextureParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTextureParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTextureParameteri(static_cast<GLuint>(textureType), GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(static_cast<GLuint>(textureType), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         // Configure the way texture repeats if at all.
-        glTextureParameteri(textureType, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTextureParameteri(textureType, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTextureParameteri(static_cast<GLuint>(textureType), GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTextureParameteri(static_cast<GLuint>(textureType), GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         // You can also specify the border color if the GL_TEXTURE_WRAP_S/T are set to be bordered.
         constexpr float flatColor[4] = { 1.f, 1.f, 1.f, 1.f };
-        glTextureParameterfv(textureType, GL_TEXTURE_BORDER_COLOR, flatColor);
+        glTextureParameterfv(static_cast<GLuint>(textureType), GL_TEXTURE_BORDER_COLOR, flatColor);
 
         // Transfer the image data from CPU to the GPU.
         // The color channel is different for PNG and JPG images (JPG doesn't have alpha channel)
         // For PNG images use GL_RGBA and for JPG images use GL_RGB as `internalformat` and `format`
-        glTexImage2D(textureType, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, imageBytes);
+        glTexImage2D(static_cast<GLenum>(textureType),
+            0,
+            static_cast<GLint>(dataFormat),
+            width,
+            height,
+            0,
+            static_cast<GLenum>(dataFormat),
+            GL_UNSIGNED_BYTE,
+            imageBytes);
         // Free the image data on the CPU side as it is already been transferred.
         stbi_image_free(imageBytes);
 
         // Generates the mip maps of the same picture, which are smaller versions of the same image.
         // E.g. The smaller mip map will be used if the image is far away.
-        glGenerateMipmap(textureType);
+        glGenerateMipmap(static_cast<GLenum>(textureType));
 
         // Unbind the texture unit slot, just in case.
-        glBindTexture(textureType, 0);
+        glBindTexture(static_cast<GLenum>(textureType), 0);
     }
 
     ~Texture() {
@@ -113,7 +167,7 @@ public:
     /// CAUTION: Expects the texture unit slot to be a regular number and not the OpenGL macro.
     auto bind(const GLint textureUnitSlotIndex) -> void {
         glActiveTexture(GL_TEXTURE0 + textureUnitSlotIndex);
-        glBindTexture(textureType, textureID);
+        glBindTexture(static_cast<GLenum>(textureType), textureID);
         lastTextureUnitSlotIndex = textureUnitSlotIndex;
     }
 
@@ -123,7 +177,7 @@ public:
     /// where this texture object was last time put into.
     auto unbind() const -> void {
         glActiveTexture(GL_TEXTURE0 + lastTextureUnitSlotIndex);
-        glBindTexture(textureType, 0);
+        glBindTexture(static_cast<GLenum>(textureType), 0);
     }
 
     /// Send the texture object this class holds to the shader code's

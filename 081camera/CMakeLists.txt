@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 
 # Project name and versioning.
-set(PROJECT_NAME 08camera)
+set(PROJECT_NAME 081camera)
 project(${PROJECT_NAME} VERSION 0.1)
 
 # Set cmake and compiler settings.

@@ -10,6 +10,7 @@ module;
 #include <glm/gtc/matrix_transform.hpp>
 
 export module camera;
+import mouse;
 
 import shader_program;
 
@@ -29,7 +30,7 @@ auto wrap(T value, T low, T high) -> T {
     return value;
 }
 
-export namespace camera_default {
+export namespace camera::defaults {
     constexpr auto worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     constexpr float near = .1f;
     constexpr float far = 100.f;
@@ -43,6 +44,8 @@ export namespace camera_default {
     constexpr float pitch = 0.f;
 }
 
+/// TODO: Should be a singleton class so make it one.
+///
 /// Camera can be thought of as an object that wraps around a single `front` vector in 3-dimensional space.
 /// This `front` vector says where the camera points to and is normalized, meaning its distance from the origin is one.
 /// So it's 'trapped' inside this sphere with its origin being the `position` of the camera
@@ -80,36 +83,39 @@ private:
     // isn't warped if the window isn't sized 1:1.
     float aspectRatio;
     // The camera's field of view.
-    float fov = camera_default::fov;
+    float fov = camera::defaults::fov;
     // The camera's near and far plane.
-    float near = camera_default::near;
-    float far = camera_default::far;
+    float near = camera::defaults::near;
+    float far = camera::defaults::far;
 
     // The camera can change its `position` vector. To do this we usually use key presses.
     // We want to be able to control the camera's movement speed to it doesn't fly around too fast or too slow.
-    float movementSpeed =camera_default::movementSpeed;
+    float movementSpeed = camera::defaults::movementSpeed;
 
     // Where the camera is placed in the world coordinates.
-    glm::vec3 position = camera_default::position;
+    glm::vec3 position = camera::defaults::position;
     // The direction the camera points at/looks at.
-    glm::vec3 front = camera_default::front;
+    glm::vec3 front = camera::defaults::front;
     // The up direction of the camera. It is used when the camera rotates around the 'roll' axis.
     // It is a cross vector of right direction and front direction.
-    glm::vec3 up = camera_default::up;
+    glm::vec3 up = camera::defaults::up;
     // Where is right direction. Is used to calculate the up direction.
     // It itself is a cross vector of front direction and world up direction.
     // Because it depends on world's up direction and not camera's up direction
     // it will always be parallel to the xy-plane.
-    glm::vec3 right = camera_default::right;
+    glm::vec3 right = camera::defaults::right;
     // The `forward` vector isn't the same as `front`, it is always parallel to the xy-plane.
     // Whereas `front` depends on the **camera's up** vector, the `forward` vector depends on the **world's up** direction.
-    glm::vec3 forward = glm::cross(camera_default::worldUp, camera_default::right);
+    glm::vec3 forward = glm::cross(camera::defaults::worldUp, camera::defaults::right);
 
     // The camera's rotation angles around its own three axis.
     // We don't need the roll angle, because it can be calculated
     // from camera's up direction and world coordinate's up direction.
-    float yaw = camera_default::yaw;
-    float pitch = camera_default::pitch;
+    float yaw = camera::defaults::yaw;
+    float pitch = camera::defaults::pitch;
+
+    // Store for the calculated view projection matrix of the camera.
+    glm::mat4 viewProjectionMatrix = glm::mat4(1.0f);
 public:
     /// Pure constructor. <br>
     /// Must provide `displayDimensions`. (crucial) <br>
@@ -118,15 +124,15 @@ public:
     /// You probably don't ever want to change the `yaw` or the `pitch` by yourself (it is quite useless). <br>
     explicit Camera(
         const glm::i32vec2& displayDimensions,
-        float movementSpeed = camera_default::movementSpeed,
-        const glm::vec3& position = camera_default::position,
-        const glm::vec3& front = camera_default::front,
-        const glm::vec3& up = camera_default::up,
-        float fov = camera_default::fov,
-        float near = camera_default::near,
-        float far = camera_default::far,
-        float yaw = camera_default::yaw,
-        float pitch = camera_default::pitch)
+        float movementSpeed = camera::defaults::movementSpeed,
+        const glm::vec3& position = camera::defaults::position,
+        const glm::vec3& front = camera::defaults::front,
+        const glm::vec3& up = camera::defaults::up,
+        float fov = camera::defaults::fov,
+        float near = camera::defaults::near,
+        float far = camera::defaults::far,
+        float yaw = camera::defaults::yaw,
+        float pitch = camera::defaults::pitch)
     : displayDimensions(displayDimensions), aspectRatio(static_cast<float>(displayDimensions.x) / static_cast<float>(displayDimensions.y))
     , fov(fov), near(near), far(far)
     , movementSpeed(movementSpeed), position(position)
@@ -141,15 +147,15 @@ public:
     /// You probably don't ever want to change the `yaw` or the `pitch` by yourself (it is quite useless). <br>
     explicit Camera(
         GLFWwindow* window,
-        float movementSpeed = camera_default::movementSpeed,
-        const glm::vec3& position = camera_default::position,
-        const glm::vec3& front = camera_default::front,
-        const glm::vec3& up = camera_default::up,
-        float fov = camera_default::fov,
-        float near = camera_default::near,
-        float far = camera_default::far,
-        float yaw = camera_default::yaw,
-        float pitch = camera_default::pitch)
+        float movementSpeed = camera::defaults::movementSpeed,
+        const glm::vec3& position = camera::defaults::position,
+        const glm::vec3& front = camera::defaults::front,
+        const glm::vec3& up = camera::defaults::up,
+        float fov = camera::defaults::fov,
+        float near = camera::defaults::near,
+        float far = camera::defaults::far,
+        float yaw = camera::defaults::yaw,
+        float pitch = camera::defaults::pitch)
     : displayDimensions(0), fov(fov), near(near), far(far), movementSpeed(movementSpeed), position(position)
     , front(front), up(up), yaw(yaw), pitch(pitch) {
         glfwGetFramebufferSize(window, &displayDimensions.x, &displayDimensions.y);
@@ -171,11 +177,17 @@ public:
         return glm::perspective(glm::radians(fov), aspectRatio, near, far);
     }
 
+    /// Updates the camera's transformation matrix.
+    [[maybe_unused]] inline auto updateViewProjectionMatrix() -> const glm::mat4& {
+        viewProjectionMatrix = getProjectionMatrix() * getViewMatrix();
+        return viewProjectionMatrix;
+    }
+
     /// The camera's transformation matrix: view matrix multiplied by projection matrix.
     /// When applied to world coordinate system, the world will move and rotate around the camera
     /// making the camera seemingly move in the world and change its viewing direction.
-    [[nodiscard]] inline auto getViewProjectionMatrix() const -> glm::mat4 {
-        return getProjectionMatrix() * getViewMatrix();
+    [[nodiscard]] inline auto getViewProjectionMatrix() const -> const glm::mat4& {
+        return viewProjectionMatrix;
     }
 
     /// Sends the camera's (view * proj) matrix to the shader program's
@@ -210,11 +222,11 @@ public:
         // NOTE: You can get the cross vectors x and y (cross(x, y)) by using the right hand rule.
         //       Index finger points in x direction, middle in y direction and thumb sticks in the
         //       direction of the cross product of x and y.
-        right = glm::normalize(glm::cross(front, camera_default::worldUp));
+        right = glm::normalize(glm::cross(front, camera::defaults::worldUp));
         // The camera's up direction is always orthogonal to the xy-plane.
         // The camera doesn't rotate in the roll axis.
         up = glm::normalize(glm::cross(right, front));
-        forward = glm::normalize(glm::cross(camera_default::worldUp, right));
+        forward = glm::normalize(glm::cross(camera::defaults::worldUp, right));
     }
 
     /// Handles keyboard events, mouse events and updates internal camera variables.
@@ -225,6 +237,9 @@ public:
         processKeyboardInput(window, deltaTime);
         processMouseInput(window, deltaTime);
         updateOrientation();
+        std::cout << "camera pos: " << position.x << ", " << position.y << ", " << position.z << std::endl;
+        std::cout << "camera front: " << front.x << ", " << front.y << ", " << front.z << std::endl;
+        std::cout << "camera yaw pitch: " << yaw << ", " << pitch << std::endl;
     }
 
     /// Processes user keyboard input and updates the camera's position and speed.
@@ -245,57 +260,35 @@ public:
             position += right * speed;
         }
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-            position += camera_default::worldUp * speed;
+            position += camera::defaults::worldUp * speed;
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-            position -= camera_default::worldUp * speed;
+            position -= camera::defaults::worldUp * speed;
         }
     }
 
     /// Processes user mouse input and update the camera's `yaw` and `pitch` orientation.
     /// Mouse movement and click update camera's yaw and pitch.
     auto processMouseInput(GLFWwindow* window, const double deltaTime) -> void {
+        std::printf( "Mouse modes: %x\n", Mouse::getInstance().getOperationalModes() );
 
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            Mouse::getInstance().enableMode(mouse::mode::is_sensing_movement);
+        }
 
-            constexpr double mouseSensitivity = 10.f;
-            const auto width = static_cast<double>(displayDimensions.x);
-            const auto height = static_cast<double>(displayDimensions.y);
-
-            // These mouse coordinates start in the top left corner - the mouse origin is the top left corner.
-            // At the top left is the position (0,0) and highest on both axis is the bottom right corner (e.g. (800, 600))
-            // We want to work with mouse coordinates with the origin being at the center of the screen.
-            double mouseX, mouseY;
-            glfwGetCursorPos(window, &mouseX, &mouseY);
-            // Adjust the mouse coordinate - shift the top left corner to the center of the screen.
-            mouseX = (mouseX - width/2);
-            mouseY = (mouseY - height/2);
-
-            std::cout << mouseX << ", " << mouseY << std::endl;
-
-            // Calculate the angle of pitch produced by the mouse movements.
-            const float rotationAroundXAxis = mouseY/height * mouseSensitivity;
-            // Calculate the angle of yaw produced by the mouse movements.
-            const float rotationAroundYAxis = mouseX/height * mouseSensitivity;
-
-            // Rotate the current front vector around the axis of right vector by amount of some x radians
-            // Adjust the pitch.
-            // const glm::vec3 frontAdjustedPitch = glm::rotate(front, glm::radians(-rotationAroundXAxis), right);
-            // front = frontAdjustedPitch;
-            // Rotate the front direction around the Y axis - adjust the yaw.
-            // const glm::vec3 frontAdjustedYaw = glm::rotate(front, glm::radians(-rotationAroundYAxis), up);
-            // front = frontAdjustedYaw;
-
-            yaw = wrap(yaw + rotationAroundYAxis, -180.f, 180.f);
-            pitch = clamp(pitch - rotationAroundXAxis, -90.f, 90.f);
-
-            std::cout << "yaw: " << yaw << std::endl;
-            std::cout << "pitch: " << pitch << std::endl;
-
-            glfwSetCursorPos(window, (width/2), (height/2));
-        } else if (glfwGetMouseButton(window, GLFW_CURSOR) == GLFW_RELEASE) {
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            Mouse::getInstance().disableMode(mouse::mode::is_sensing_movement);
+        }
+
+        if (Mouse::getInstance().inMode(mouse::mode::is_sensing_movement)) {
+            const auto cursor = glm::f32vec2(Mouse::getInstance().getCursorPosition());
+            const auto lastCursor = glm::f32vec2(Mouse::getInstance().getLastCursorPosition());
+            const auto sensitivity = static_cast<float>(Mouse::getInstance().getMovementSensitivity());
+
+            yaw += (cursor.x - lastCursor.x) * sensitivity;
+            pitch -= (cursor.y - lastCursor.y) * sensitivity;
         }
 
     }
