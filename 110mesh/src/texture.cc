@@ -197,7 +197,7 @@ public:
 
     /// Frees the texture object with reference ID of `textureID` from the GPU.
     /// This code musn't be in the decostructor. That would fuck up the copy semantics.
-    auto DeleteResource() -> void {
+    auto deleteResource() -> void {
         if (textureID != 0) {
             glDeleteTextures(1, &textureID);
         }

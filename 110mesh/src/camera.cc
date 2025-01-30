@@ -245,16 +245,25 @@ public:
     /// Handles keyboard events, mouse events and updates internal camera variables.
     /// Updates the camera's orientation angles - yaw, pitch.
     /// Updates the camera's position.
+    /// Updates camera projection-view matrix.
     /// Should be called in the main loop on every frame.
     auto onNextFrame(GLFWwindow *window, const double deltaTime) -> void {
+        // Process user input 
+        // that update camera position
         processKeyboardInput(window, deltaTime);
+        // and changes the yaw and pitch angles.
         processMouseInput(window, deltaTime);
+        
+        // Apply these changes in yaw and pitch angles 
+        // to update the orientation vectors.
         updateOrientation();
-
-        // Update display dimentsion and aspect ratio.
+        // Update display dimension and aspect ratio.
         glfwGetFramebufferSize(window, &displayDimensions.x, &displayDimensions.y);
         aspectRatio = static_cast<float>(displayDimensions.x) / static_cast<float>(displayDimensions.y);
-
+        // Update the camera's projection-view matrix after all 
+        // orientation vectors and frame dimensions were updated. 
+        updateProjectionViewMatrix();
+        
         // std::cout << "camera pos: " << position.x << ", " << position.y << ", " << position.z << std::endl;
         // std::cout << "camera front: " << front.x << ", " << front.y << ", " << front.z << std::endl;
         // std::cout << "camera yaw pitch: " << yaw << ", " << pitch << std::endl;

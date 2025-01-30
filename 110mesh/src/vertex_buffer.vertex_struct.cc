@@ -34,7 +34,6 @@ export struct Vertex {
         return Vertex{ .position=position, .normal=normal, .color=color, .texUV=texUV };
     }
 
-    // This is an aggregate type meaning it musn't have any private or non-static member functions.
     // Vertex(
     //     glm::f32vec3 position,
     //     glm::f32vec3 normal,

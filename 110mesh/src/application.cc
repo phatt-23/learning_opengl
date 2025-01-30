@@ -153,42 +153,24 @@ private:
 
     // Represents the main game loop.
     auto mainLoop() -> void {
-            // Create camera object.
+        // Create camera object.
         auto camera = Camera(this->window, 2.f, glm::vec3(0.0f, 0.0f, 4.0f));
         // Create mouse singleton instance.
         Mouse::createInstance(this->window, 0.6f);
 
-        // Creating texture object and sending it to the shader code's uniform sampler variable.
+        // Creating texture object for the floor mesh.
         auto floorTextures = std::vector<Texture> {
             Texture("./textures/planks.png", texture::Dimension::$2D, texture::Type::DiffuseMap, texture::DataFormat::RGBA, 0),
             Texture("./textures/planksSpec.png", texture::Dimension::$2D, texture::Type::SpecularMap, texture::DataFormat::R, 1),
         };
 
-    	// The pyramid object.
+    	// The floor mesh (has its own VAO) and the shader program it will use.
         auto floorMesh = Mesh(floorVertices, floorIndices, floorTextures);
-        // const auto floorVertexBuffer = VertexBuffer(floorVertices);
-        // const auto floorIndexBuffer = IndexBuffer(floorIndices);
-        // const auto floorVertexArray = VertexArray();
-        // floorVertexArray.linkVertexBufferAndIndexBuffer(
-        // 	floorVertexBuffer,
-        //     Vertex::getLayout(),
-        // 	floorIndexBuffer
-        // );
-
         auto floorShader = ShaderProgram("./shaders/floor.glsl");
-        // Texture::setSamplerInShader(floorShader, "U_Material.DiffuseMap0", 0);
-        // Texture::setSamplerInShader(floorShader, "U_Material.SpecularMap0", 1);
 
-		// The light cube object.
+		// The light cube mesh and the shader program it will use.
         auto lightCubeMesh = Mesh(lightVertices, lightIndices, {});
-        // const auto lightCubeVertexBuffer = VertexBuffer(lightVertices);
-        // const auto lightCubeIndexBuffer = IndexBuffer(lightIndices);
-        // const auto lightCubeVertexArray = VertexArray();
-        // lightCubeVertexArray.linkVertexBufferAndIndexBuffer(
-        //     lightCubeVertexBuffer,
-        //     Vertex::getLayout(),
-        //     lightCubeIndexBuffer
-        // );
+    	auto lightCubeShader = ShaderProgram("./shaders/light_cube.glsl");
 
     	auto lightCubeColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -196,8 +178,6 @@ private:
     	auto lightCubePositionVec = glm::vec3(0.5f, 0.5f, 0.5f);
     	auto lightCubeTranslationMat = glm::translate(lightCubeModelMat, lightCubePositionVec);
     	lightCubeModelMat = lightCubeTranslationMat;
-
-    	auto lightCubeShader = ShaderProgram("./shaders/light_cube.glsl");
 
 		lightCubeShader.bind();
     	lightCubeShader.setUniform4f("U_ColorVec4", lightCubeColor);
@@ -213,59 +193,33 @@ private:
         float rotationInDegrees = 0.0f;
 
         while (!glfwWindowShouldClose(this->window)) {
-            // Poll events, handle resizing of the window
-            this->onNextFrame();
-            // Update the delta time for the current frame.
-            Timer::getInstance().onNextFrame();
-            Mouse::getInstance().onNextFrame();
-            // Handled user input and update the camera's internal variables - position and look at direction.
-            camera.onNextFrame(this->window, Timer::getInstance().getDeltaTime());
-            camera.updateProjectionViewMatrix();
+            this->onNextFrame(); // Poll events, handle resizing of the window
+            Timer::getInstance().onNextFrame(); // Update the delta time for the current frame.
+            Mouse::getInstance().onNextFrame(); // Does not reset the last cursor.
+            // Handles user input and update the camera's position and orientation (and proj-veiw matrix).
+            camera.onNextFrame(this->window, Timer::getInstance().getDeltaTime()); 
             // Resets the mouse after all of its user are done using it. TODO: Observer pattern.
             Mouse::getInstance().resetLastCursorPosition();
-                
 
             // Update objects in the scene
             this->onUpdate();
 
-            // Send the camera's inverse model-projection matrix to the shader GPU code.
-            // camera.sendProjectionViewMatToShader(floorShader, "U_CameraProjViewMat4");
-            // camera.sendPositionToShader(floorShader, "U_CameraPositionVec3");
-    		camera.sendProjectionViewMatToShader(lightCubeShader, "U_CameraProjViewMat4");
-
-        	// Send the floor to the shader code.
+        	// Send the floor model matrix to the shader code.
             auto rotationMat = glm::mat4(1.0f);
             auto translationMat = glm::mat4(1.0f);
             rotationInDegrees += 10.f * Timer::getInstance().f32getDeltaTime();
             rotationMat = glm::rotate(rotationMat, glm::radians(rotationInDegrees), glm::vec3(0.0f, 1.0f, 0.0f));
-            translationMat = glm::translate(translationMat, glm::vec3(0.0f, 0.0f, 0.0f));
+            translationMat = glm::translate(translationMat, glm::vec3(0.0f, 0.3f, 0.0f));
             auto modelMat = translationMat * rotationMat;
             floorShader.bind();
             floorShader.setUniformMat4f("U_ModelMat4", modelMat);
             ShaderProgram::unbind();
 
-			// The light cube's shader code variables stays the same.
-        	// No setting is done.
-
         	// Draw the floor.
             floorMesh.draw(floorShader, camera);
-            // floorTextures[0].bindToLastSlot();
-            // floorTextures[1].bindToLastSlot();
-            // floorShader.bind();
-            // floorVertexArray.bind();
-            // glDrawElements(GL_TRIANGLES, floorIndexBuffer.getElementCount(), GL_UNSIGNED_INT, nullptr);
-            // floorTextures[0].unbind();
-            // floorTextures[1].unbind();
-            // ShaderProgram::unbind();
-            // VertexArray::unbind();
 
 			// Draw the light cube.
             lightCubeMesh.draw(lightCubeShader, camera);
-            // lightCubeShader.bind();
-            // lightCubeVertexArray.bind();
-            // glDrawElements(GL_TRIANGLES, lightCubeIndexBuffer.getElementCount(), GL_UNSIGNED_INT, nullptr);
-            // ShaderProgram::unbind();
-            // VertexArray::unbind();
 
             // Render the objects to the window
             this->onRender();
