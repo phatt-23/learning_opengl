@@ -123,9 +123,7 @@ private:
         // Create a model from file.
         auto modelShader = ShaderProgram("./shaders/model_loading.glsl");
         auto model = Model("./models/grindstone/scene.gltf");
-        
-        const auto transform = Transformation({0.f, 0.f, -1.f}, {0.f, 1.f, 0.f}, -90.f, {.01f, .01f, .01f});
-        // const auto transform = Transformation();
+        const auto transform = Transformation({0.0, 0.0, -1.0}, {0.0, 1.0, 0.0}, -90.0, {1.0, 1.0, 1.0});
 
         while (!glfwWindowShouldClose(this->window)) {
             this->onNextFrame(); // Poll events, handle resizing of the window

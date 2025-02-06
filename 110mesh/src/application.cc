@@ -208,7 +208,7 @@ private:
             auto rotationMat = glm::mat4(1.0f);
             auto translationMat = glm::mat4(1.0f);
             rotationInDegrees += 10.f * Timer::getInstance().f32getDeltaTime();
-            rotationMat = glm::rotate(rotationMat, glm::radians(rotationInDegrees), glm::vec3(0.0f, 1.0f, 0.0f));
+            rotationMat = glm::rotate(rotationMat, glm::radians(rotationInDegrees), glm::vec3(1.0f, 0.0f, 0.0f));
             translationMat = glm::translate(translationMat, glm::vec3(0.0f, 0.3f, 0.0f));
             auto modelMat = translationMat * rotationMat;
             floorShader.bind();
