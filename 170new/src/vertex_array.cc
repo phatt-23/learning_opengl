@@ -31,7 +31,6 @@ public:
         linkVertexBuffer(buffer, layout);
     }
 
-
     /// Deconstructor that doesn't delete the
     /// the vertex array resource from OpenGL.
     ~VertexArray() = default;
@@ -80,6 +79,11 @@ public:
     /// Unbinds the VAO.
     static auto unbind() -> void {
         glBindVertexArray(0);
+    }
+
+
+    auto getID() const -> GLuint {
+        return vertexArrayID;
     }
 };
 

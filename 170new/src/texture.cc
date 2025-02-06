@@ -92,9 +92,9 @@ private:
 public:
     Texture(
         const glm::u32vec2 size,
-        const Dimension dimension,
         const Type type,
-        const DataFormat format,
+        const DataFormat format = DataFormat::RGB,
+        const Dimension dimension = Dimension::$2D,
         const int textureUnitSlot = 0)
     : textureDimension(dimension), dataFormat(format)
     , lastTextureUnitSlotIndex(textureUnitSlot), textureType(type)
@@ -136,9 +136,9 @@ public:
     ///          The `dataFormat` must be specified when using depth or depth-stencil textures.
     Texture(
         const std::string& filepath,
-        const Dimension dimension,
         const Type type,
         const DataFormat format = DataFormat::NotSpecified,
+        const Dimension dimension = Dimension::$2D,
         const int textureUnitSlot = 0) 
     : filepath(filepath), textureDimension(dimension), dataFormat(format)
     , lastTextureUnitSlotIndex(textureUnitSlot), textureType(type) {

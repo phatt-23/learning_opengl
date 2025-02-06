@@ -84,6 +84,8 @@ public:
         const Camera& camera,
         const Transformation& transformation
     ) -> void {
+        std::cout << "Drawing mesh with VAO.id: " << vertexArray.getID() << "\n";
+
         int diffuseNumber = 0;
         int specularNumber = 0;
 

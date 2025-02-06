@@ -41,10 +41,10 @@ using namespace framebuffer;
 // fb.draw(start: {x, y}, size: {width, height});
 
 const std::vector<Vertex> quadVertices{
-    Vertex{ .position = {-1, -1, 0}, .texUV = {0, 0} },
-    Vertex{ .position = {1, -1, 0}, .texUV = {1, 0} },
-    Vertex{ .position = {1, 1, 0}, .texUV = {1, 1} },
-    Vertex{ .position = {-1, 1, 0}, .texUV = {0, 1} }
+    Vertex{ .position = {-1, -1,  0 }, .texUV = {0, 0} },
+    Vertex{ .position = { 1, -1,  0 }, .texUV = {1, 0} },
+    Vertex{ .position = { 1,  1,  0 }, .texUV = {1, 1} },
+    Vertex{ .position = {-1,  1,  0 }, .texUV = {0, 1} }
 };
 
 const std::vector<GLuint> quadIndices{ 0, 1, 2, 0, 2, 3, };
@@ -66,13 +66,13 @@ private:
 public:
     explicit FrameBuffer(
         const glm::vec2& size,
-        const glm::vec4& clearColor = glm::vec4(1.0), 
+        const glm::vec4& clearColor = glm::vec4(1.0, 0.1, 0.1, 1.0), 
         const uint32_t attachmentFlags = DepthRenderBuffer | StencilRenderBuffer
     ) 
     : mSize(size)
     , mClearColor(clearColor)
     , mAttachmentFlags(attachmentFlags)
-    , mColorTexture(size, texture::Dimension::$2D, texture::Type::DiffuseMap, texture::DataFormat::RGB)
+    , mColorTexture(size, texture::Type::DiffuseMap)
     , mVBO(quadVertices)
     , mIBO(quadIndices)
     , mVAO(mVBO, Vertex::getLayout(), mIBO)
@@ -104,54 +104,78 @@ public:
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
    
-
-    auto bind() const -> void {
-        glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferID);
-    }
-
-
+    /// Bind back to the default framebuffer.
     static auto bindToDefault() -> void {
+        std::cout << "Bound default framebuffer with id: 0\n";
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-
+    /// Clears the current framebuffer's buffers (color, depth, stencil).
     static auto clear(const std::uint32_t bufferBits, const glm::vec4& clearColor) -> void {
+        std::cout << "Cleared buffers: " << bufferBits
+                << ", clear color: (" << clearColor.x << ", "
+                                    << clearColor.y << ", "
+                                    << clearColor.z << ", "
+                                    << clearColor.w << ")\n";
         glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
         glClear(bufferBits); 
     }
 
+    /// Binds this framebuffer to be current.
+    auto bind() const -> void {
+        std::cout << "Bound framebuffer with id: " << mFrameBufferID << "\n";
+        glBindFramebuffer(GL_FRAMEBUFFER, mFrameBufferID);
+    }
 
+    /// Binds this framebuffer and clears this framebuffer's buffers.
     auto clear(const std::uint32_t bufferBits) const -> void {
-        glClearColor(mClearColor.x, mClearColor.y, mClearColor.z, mClearColor.w);
-        glClear(bufferBits); 
+        bind();
+        FrameBuffer::clear(bufferBits, mClearColor);
     }
     
-    auto getColorTexture() -> Texture& {
+    auto getID() const -> GLuint {
+        return mFrameBufferID;
+    }
+
+    auto getColorTexture() -> const Texture& {
         return mColorTexture;
+    }
+
+    auto getVAO() const -> const VertexArray& {
+        return mVAO; 
+    }
+
+    auto getIBO() const -> const IndexBuffer& {
+        return mIBO;
     }
 
     auto draw(
         ShaderProgram& shader, 
         const Transformation& transform
     ) -> void {
+        std::cout << "Drawing the framebuffer " << mFrameBufferID << " to currently bound framebuffer\n";
+
         // Go back to the default framebuffer and draw the color buffer
         // of the previous framebuffer. 
-        FrameBuffer::bindToDefault();
+        // FrameBuffer::bindToDefault();
         // Disable the depth testing so the texture always appears on top. 
-        glDisable(GL_DEPTH_TEST);
+        // glDisable(GL_DEPTH_TEST);
         // We clear only the color buffer because thats all we use in the default framebuffer
         // when drawing.
         // glClearColor(1.0, 1.0, 1.0, 1.0);
         // glClear(GL_COLOR_BUFFER_BIT);
 
         // Bind the texture to be drawn out.
-        mColorTexture.bindToSlot(0);
+        const int textureUnitSlot = 0;
+
+        mColorTexture = Texture("./textures/brick.png", texture::Type::DiffuseMap);
+
+        mColorTexture.bindToSlot(textureUnitSlot);
 
         // Bind the simple shader that only draws out the texture.
         shader.bind();
+        shader.setUniform1i("U_ScreenTexture", textureUnitSlot);
         shader.setUniformMat4f("U_ModelMat4", transform.getModelMat());
-        shader.setUniform1i("screenTexture", 0);
-
 
         // Draw it.
         mVAO.bind();
@@ -159,7 +183,7 @@ public:
                        GL_UNSIGNED_INT, nullptr);
 
 
-        glEnable(GL_DEPTH_TEST);
+        // glEnable(GL_DEPTH_TEST);
     }
 };
 

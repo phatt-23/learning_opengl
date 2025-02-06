@@ -102,6 +102,7 @@ public:
         const Camera& camera,
         const Transformation& transformation
     ) -> void {
+        std::cout << "drawing model: " << filePath << "\n";
         for (auto& mesh : meshes) {
             mesh.draw(shader, camera, transformation);
         }
@@ -246,7 +247,7 @@ private:
                 }
             }();
 
-            const auto texture = Texture(path, texture::Dimension::$2D, textureType);
+            const auto texture = Texture(path, textureType);
             loadedTexturesCache[path] = texture;
             textures.push_back(texture);
         }

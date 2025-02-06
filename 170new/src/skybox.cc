@@ -82,9 +82,7 @@ private:
 public:
     Skybox(const std::string& skyboxTexturesDirectory)
     : mShader(skyboxSources), mTexture(skyboxTexturesDirectory, 
-                                       texture::Dimension::$2D, 
-                                       texture::Type::CubeMap, 
-                                       texture::DataFormat::RGB),
+                                        texture::Type::CubeMap),
         mVBO(skyboxVertices.data(), skyboxVertices.size()),
         mIBO(skyboxIndices),
         mVAO(mVBO, VertexBufferLayout().pushAttribute<float>(3, "pos"), mIBO)

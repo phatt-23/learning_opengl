@@ -1,6 +1,7 @@
 //
 // Created by phatt on 1/23/25.
 //
+
 module;
 
 #include "std.h"
@@ -25,7 +26,7 @@ import mesh;
 import model;
 import transformation;
 import skybox;
-// import frame_buffer;
+import frame_buffer;
 
 auto lightVertices = std::vector<Vertex> {
     Vertex{ {-0.1f, -0.1f,  0.1f} },
@@ -174,11 +175,11 @@ private:
         ShaderProgram screenShader("./shaders/screen.glsl");
 
         // Create a model from file.
-        Model model("./models/grindstone/scene.gltf");
+        // auto model = Model("./models/grindstone/scene.gltf");
         // Model model("./models/lingerie_girl/scene.gltf");
         // Model model("./models/the_girl_on_the_floor/scene.gltf");
         // Model model("./models/the_girl_on_the_floor_v2/scene.gltf");
-        // Model model("./models/goddess_white_voluptuous/scene.gltf");
+        Model model("./models/goddess_white_voluptuous/scene.gltf");
         // Model model = Model("./models/girl_in_lingerie/scene.gltf");
         // Model model("./models/alleyana/scene.gltf");
         // auto model = Model("./models/scimitar/scene.gltf"); // doesn't work
@@ -196,8 +197,8 @@ private:
 
 
         Mesh floorMesh(floorVertices, floorIndices, {
-            Texture("./textures/planks.png", texture::Dimension::$2D, texture::Type::DiffuseMap, texture::DataFormat::RGBA),
-            Texture("./textures/planksSpec.png", texture::Dimension::$2D, texture::Type::SpecularMap, texture::DataFormat::R),
+            Texture("./textures/planks.png", texture::Type::DiffuseMap),
+            Texture("./textures/planksSpec.png", texture::Type::SpecularMap),
         });
 
 
@@ -213,7 +214,7 @@ private:
     	floorShader.setUniform3f("U_LightPositionVec3", lightPosition);
 
 
-        // FrameBuffer framebuffer(displayDimensions);
+        FrameBuffer FBO(displayDimensions);
 
 
         float rotationInDegrees = 0.f;
@@ -226,30 +227,43 @@ private:
             camera.onNextFrame(this->window, Timer::getInstance().getDeltaTime()); 
             // Resets the mouse after all of its user are done using it. TODO: Observer pattern.
             Mouse::getInstance().resetLastCursorPosition();
+            // clear the main buffers
+            FrameBuffer::bindToDefault();
+            FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, 
+                               {0.9f, 0.3f, 0.3f, 1.0f});
             
             rotationInDegrees += Timer::getInstance().f32getDeltaTime() * 30.f;
 
             // Update objects in the scene
             this->onUpdate();
 
-            const Transformation modelTransform( {0.0, 0.2, 0.0}, {0, 1, 0}, rotationInDegrees, glm::vec3(1.0) );
-            const Transformation lightTransform( lightPosition, {0.0, 1.0, 0.0}, 0.0, {0.2, 0.2, 0.2} );
-            const Transformation floorTransform( {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0, {1.0, 1.0, 1.0} );
+            const Transformation modelTransform( {0, 0.2, 0}, {0, 1, 0}, rotationInDegrees, glm::vec3(1.0) );
+            const Transformation lightTransform( lightPosition, {0, 1, 0}, 0, {0.2, 0.2, 0.2} );
+            const Transformation floorTransform( {0, 0, 0}, {0, 1, 0}, 0, {1, 1, 1} );
 
             // Draw to this frame-buffer's color buffer. Filling in the texture
             // with the rendered scene.
-            // framebuffer.bind();
-            // framebuffer.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            FBO.bind();
+            // glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+            // glClearColor(0.1, 0.1, 0.1, 1.0);
+            FrameBuffer::clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+                               {0.0, 1.0, 0.0, 1.0});
+            // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnable(GL_DEPTH_TEST);
+            
 
             // Polygon drawing mode
             // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-            lightMesh.draw(lightShader, camera, lightTransform);
-            floorMesh.draw(floorShader, camera, floorTransform);
             model.draw(modelShader, camera, modelTransform);
 
+            FrameBuffer::bindToDefault();
+
+            lightMesh.draw(lightShader, camera, lightTransform);
+            floorMesh.draw(floorShader, camera, floorTransform);
+
             // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            
+
             skybox.draw(camera, true);
 
 
@@ -258,16 +272,28 @@ private:
             // the texture always appears on top. We clear only the color
             // buffer because that all that we use in the default framebuffer.
             // FrameBuffer::bindToDefault();
-            // FrameBuffer::clear(GL_COLOR_BUFFER_BIT, {1.0, 1.0, 1.0, 1.0});
+            // glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            // glClearColor(1.0, 1.0, 1.0, 1.0);
+            // glClear(GL_COLOR_BUFFER_BIT);
             // glDisable(GL_DEPTH_TEST);
+            
+            FBO.draw(screenShader, Transformation({-0.5, 0, 0}, {0, 1, 0}, 0, glm::vec3(0.2)));
 
             // Bind the texture to be drawn out.
-            // framebuffer.getColorTexture().bindToSlot(0);
+            // glActiveTexture(GL_TEXTURE0 + 0);
+            // glBindTexture(GL_TEXTURE_2D, textureColorBufferID);
+
+            // Bind the simple shader that only draws out the texture.
+            // It doesn't do any extra maths.
+            // screenShader.bind();
+            // screenShader.setUniform1i("screenTexture", 0);
+
+            // Draw it.
+            // quadVAO.bind();
+            // glDrawElements(GL_TRIANGLES, static_cast<int>(quadIndices.size()), GL_UNSIGNED_INT, nullptr);
             
-            // framebuffer.draw(screenShader, Transformation());
-
-            // glEnable(GL_DEPTH_TEST);
-
+            std::cout << "-----------------------------------------------------\n";
+            
             // Render the objects to the window
             this->onRender();
         }

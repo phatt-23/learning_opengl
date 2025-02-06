@@ -1,32 +1,36 @@
 /// #shader vertex
 #version 330 core
+
 layout (location = 0) in vec3 aPos;
 layout (location = 2) in vec2 aTexCoords;
 
 out vec2 TexCoords;
 
+uniform mat4 U_ModelMat4;
+
 void main() {
-    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+    gl_Position = U_ModelMat4 * vec4(aPos.x, aPos.y, 0.0, 1.0);
     TexCoords = aTexCoords;
 }
 
 /// #shader fragment
 #version 330 core
+
 out vec4 FragColor;
 
 in vec2 TexCoords;
 
-uniform sampler2D screenTexture;
+uniform sampler2D U_ScreenTexture;
 
 void main() {
     // No effect
-    FragColor = vec4(vec3(texture(screenTexture, TexCoords)), 1.0);
+    FragColor = vec4(vec3(texture(U_ScreenTexture, TexCoords)), 1.0);
 
     // Color inversion
-    // FragColor = vec4(vec3(1.0 - texture(screenTexture, TexCoords)), 1.0);
+    // FragColor = vec4(vec3(1.0 - texture(U_ScreenTexture, TexCoords)), 1.0);
 
     // Grayscale
-    // FragColor = texture(screenTexture, TexCoords);
+    // FragColor = texture(U_ScreenTexture, TexCoords);
     // float average = (FragColor.r + FragColor.g + FragColor.b) / 3.0;
     // float average = 0.2126 * FragColor.r + 0.7152 * FragColor.g + 0.0722 * FragColor.b;
     // FragColor = vec4(average, average, average, 1.0);
@@ -70,7 +74,7 @@ void main() {
 //
 //    vec3 sampleTex[9];
 //    for (int i = 0; i < 9; i++) {
-//        sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
+//        sampleTex[i] = vec3(texture(U_ScreenTexture, TexCoords.st + offsets[i]));
 //    }
 //
 //    vec3 color = vec3(0.0);
